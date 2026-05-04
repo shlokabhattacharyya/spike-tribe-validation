@@ -1,0 +1,8 @@
+label           dud  mid  viral  All
+intended_label                      
+not_viral        35    0      0   35
+viral             0    8     26   34
+All              35    8     26   69
+
+Intended-viral hit rate: 76.5%
+Intended-dud hit rate: 100.0%

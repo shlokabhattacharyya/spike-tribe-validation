@@ -1,0 +1,17 @@
+Headline AUC (5-fold stratified CV)
+n = 61 (viral=26, dud=35)
+LogisticRegression C=1.0, PCA components=30
+
+Baseline (log_followers + duration):
+  AUC = 0.790 +/- 0.077
+
+Baseline + TRIBE PCA-30:
+  AUC = 0.745 +/- 0.161
+  Delta: -0.045
+
+PCA sensitivity:
+  PCA-  5: AUC = 0.707 +/- 0.087
+  PCA- 10: AUC = 0.705 +/- 0.102
+  PCA- 20: AUC = 0.772 +/- 0.150
+  PCA- 30: AUC = 0.745 +/- 0.161
+  PCA- 40: AUC = 0.765 +/- 0.128

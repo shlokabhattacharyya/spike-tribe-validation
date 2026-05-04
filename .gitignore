@@ -1,0 +1,9 @@
+data/raw/
+data/features/
+*.mp4
+*.npz
+.env
+__pycache__/
+.ipynb_checkpoints/
+.venv/
+.DS_STORE
