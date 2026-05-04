@@ -1,7 +1,5 @@
 # TRIBE Phase 1 Validation Findings
 
----
-
 ## TL;DR
 
 Built end-to-end TRIBE extraction + analysis pipeline. On a 69-video, single-video-per-creator dataset, **TRIBE-derived cortical features do not add predictive value above creator metadata** (`log(followers) + duration`). Bootstrap 95% CI on the AUC delta is [-0.11, +0.15] — statistically indistinguishable from baseline at this n.
@@ -11,8 +9,6 @@ This is **not evidence against TRIBE**. It is evidence that this dataset cannot 
 **Recommended next investment:** v2 dataset of 5-8 creators × 4-6 videos each (n=20-50 within-creator pairs), which would test the actual question.
 
 The strongest standalone finding from this sprint is non-modeling: **intended-not-viral picks were 100% accurate; intended-viral picks were only 76.5% accurate**. Predicting *what won't go viral* is easy; predicting *what will* is genuinely hard. This asymmetry is the empirical justification for a prediction market.
-
----
 
 ## Headline result
 
@@ -36,8 +32,6 @@ Continuous regression (Spearman ρ on log views, n=69):
 
 The point estimate is slightly negative; the bootstrap distribution is centered slightly positive but with wide uncertainty. Both views support the same conclusion: **at n=61, TRIBE features are statistically indistinguishable from no information.**
 
----
-
 ## Why TRIBE doesn't lift here: the diagnostic story
 
 Three findings explain the null result without indicting the model.
@@ -54,8 +48,6 @@ Initial univariate analysis showed 12 of 150 Destrieux ROIs significantly correl
 Predict log views from baseline → take residuals → check if any TRIBE ROI correlates with residuals. **0 of 150 ROIs significant at p<0.01** (vs 1.5 expected by chance). TRIBE features are not finding signal that baseline misses.
 
 The same pattern holds for the engagement outcome (log views/followers): 0 of 150 ROIs significant. If TRIBE captures content-driven appeal independent of reach, this dataset is not where it shows up.
-
----
 
 ## What's robust regardless of headline
 
@@ -77,15 +69,12 @@ Two-dimensional PCA on TRIBE fusion features explains 41% of variance and visibl
 ### TRIBE-alone clears chance
 TRIBE features alone, without any metadata, achieve AUC 0.677 ± 0.269 on viral-vs-dud (n=61). High variance, well below baseline (0.790), but meaningfully above chance (0.5). Suggests there is *some* signal — just not enough to detect at this n.
 
----
 
 ## Why this dataset can't test TRIBE's actual hypothesis
 
 TRIBE's value proposition is that brain-aligned content features predict virality *conditional on creator reach*. Testing this requires paired within-creator data: same creator, multiple videos, some viral some not. We have 68 unique creators with one video each (foot_cartel appears twice). Without within-creator pairs, all comparisons collapse into between-creator comparisons, which are dominated by follower count.
 
 Sample size context: published TikTok virality work uses n=400+ videos. We have 61. With 5-fold CV at this n, the standard error on AUC is roughly ±0.08, so the detection threshold for any real effect is ~0.10 AUC. Anything smaller than that is invisible. The TRIBE delta we'd need to detect (5+ AUC points per the memo) is at the edge of what n=61 can resolve.
-
----
 
 ## What this means for the v2 dataset
 
@@ -96,8 +85,6 @@ A proper test requires:
 3. **Larger absolute n.** Target n=200+ for any between-creator analyses to have detection power.
 4. **Engagement-relative-to-reach as the primary outcome.** log(views/followers) instead of raw views. This is what a prediction market needs — content quality, not creator fame.
 5. **Full-video extraction.** Don't cap at 30s. The viral hook is at seconds 1-3 but mean-pooling across the full video may be losing it; a v2 analysis should also test temporal pooling alternatives (max-pool, first-15s, peak detection).
-
----
 
 ## What was built (deliverables in repo)
 
@@ -112,8 +99,6 @@ A proper test requires:
 
 Everything reproduces from the CSV + extracted features in <10 min on CPU.
 
----
-
 ## Methodology notes (for transparency)
 
 - **Extraction:** 17 videos full-length, 52 capped at first 30 seconds due to a Colab disconnect mid-overnight run. Whisper transcribes full audio regardless; only the V-JEPA2 video chunks are truncated for capped videos. Re-running with full extraction is the obvious next compute investment but didn't change the n=61 detection floor.
@@ -123,8 +108,6 @@ Everything reproduces from the CSV + extracted features in <10 min on CPU.
 - **Outcome variable:** primary analysis uses `views_at_30d` per memo. Secondary engagement analysis uses `log(views/followers)` and shows the same null result.
 - **Cross-validation:** 5-fold stratified, fixed random_state=42 for reproducibility. Bootstrap CI uses 500 resamples at the video level.
 - **Apify free-tier exhaustion:** `creator_avg_views_trailing_30d` populated for only 11/70 rows; column omitted from baseline. `creator_followers_at_post` populated 70/70.
-
----
 
 ## Bottom line
 
